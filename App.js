@@ -51,29 +51,7 @@ export default class App extends React.Component {
       .then((responseData) => {
         this.setState({
           card: {
-            title: responseData[0].title.rendered,
-            excerpt: responseData[0].excerpt.rendered,
-            pic:
-              responseData[0]["_embedded"]["wp:featuredmedia"][0]["source_url"],
-          },
-          card2: {
-            title: responseData[1].title.rendered,
-            excerpt: responseData[1].excerpt.rendered,
-            pic: stuteLogo,
-          },
-          card3: {
-            title: responseData[2].title.rendered,
-            excerpt: responseData[2].excerpt.rendered,
-            pic: stuteLogo,
-          },
-          card4: {
-            title: responseData[3].title.rendered,
-            excerpt: responseData[3].excerpt.rendered,
-            pic: stuteLogo,
-          },
-          card5: {
-            title: responseData[4].title.rendered,
-            excerpt: responseData[4].excerpt.rendered,
+            cardData: responseData,
           },
         });
       })
@@ -97,7 +75,10 @@ export default class App extends React.Component {
   }
 
   renderCard() {
-    let quote = this.state.card.pic;
+    this.state.card.cardData.forEach((element) => {
+      console.log(element.title.rendered);
+    });
+
     return (
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.container}>
@@ -105,47 +86,17 @@ export default class App extends React.Component {
             <Text style={styles.logo}>The Stute</Text>
           </View>
 
-          <View style={styles.imageContainer}>
-            <Text style={styles.text}>{this.state.card.title}</Text>
-            <Text>{this.state.card.excerpt}</Text>
-            <Image
-              style={{ marginRight: 0, marginBottom: 20, height: 200 }}
-              source={{ uri: this.state.card.pic }}
-            />
-            <View style={styles.horizLine} />
-          </View>
-          <View style={styles.imageContainer}>
-            <Text style={styles.text}>{this.state.card2.title}</Text>
-            <Text>{this.state.card2.excerpt}</Text>
-            <Image
-              style={{ marginRight: 0, marginBottom: 20, height: 200 }}
-              source={{ uri: this.state.card2.pic }}
-            />
-            <View style={styles.horizLine} />
-          </View>
-          <View style={styles.imageContainer}>
-            <Text style={styles.text}>{this.state.card3.title}</Text>
-            <Text>{this.state.card3.excerpt}</Text>
-            <Image
-              style={{ marginRight: 0, marginBottom: 20, height: 200 }}
-              source={{ uri: this.state.card3.pic }}
-            />
-            <View style={styles.horizLine} />
-          </View>
-          <View style={styles.imageContainer}>
-            <Text style={styles.text}>{this.state.card4.title}</Text>
-            <Text>{this.state.card4.excerpt}</Text>
-            <Image
-              style={{ marginRight: 0, marginBottom: 20, height: 200 }}
-              source={{ uri: this.state.card3.pic }}
-            />
-            <View style={styles.horizLine} />
-          </View>
-          <View style={styles.imageContainer}>
-            <Text style={styles.text}>{this.state.card5.title}</Text>
-            <Text>{this.state.card4.excerpt}</Text>
-            <View style={styles.horizLine} />
-          </View>
+          {this.state.card.cardData.map((obj) => (
+            <View style={styles.imageContainer}>
+              <Text style={styles.text}>{obj.title.rendered}</Text>
+              <Text>{obj.excerpt.rendered}</Text>
+              {/* <Image
+                style={{ marginRight: 0, marginBottom: 20, height: 200 }}
+                source={{ uri: this.state.card.pic }}
+              /> */}
+              <View style={styles.horizLine} />
+            </View>
+          ))}
         </View>
       </ScrollView>
     );
