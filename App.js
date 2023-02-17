@@ -1,4 +1,11 @@
 import React from "react";
+import { 
+  TRenderEngineProvider, 
+  RenderHTMLConfigProvider,
+  RenderHTMLSource,
+  RenderHTML,
+  defaultSystemFonts
+} from "react-native-render-html";
 import {
   Text,
   FlatList,
@@ -9,9 +16,16 @@ import {
   TouchableHighlight,
   Image,
   ScrollView,
+  useWindowDimensions,
 } from "react-native";
 
-const REQUEST_URL = "https://thestute.com/wp-json/wp/v2/posts?_embed";
+const systemFonts = ["Georgia", ...defaultSystemFonts]
+
+const POST_URL = "https://thestute.com/wp-json/wp/v2/posts";
+const FEATURED = "sticky=true"
+const PER_PAGE = "per_page="
+
+const MEDIA_URL = "https://thestute.com/wp-json/wp/v2/media";
 
 const windowSize = Dimensions.get("window");
 
@@ -35,33 +49,54 @@ export default class App extends React.Component {
   getInitialState() {
     return {
       card: null,
+      images: { },
     };
   }
 
   componentDidMount() {
-    this.fetchData();
+    this.fetchData(POST_URL+"?"+FEATURED+"&"+PER_PAGE+"10");
   }
 
-  fetchData() {
+  fetchData = async (url) => {
+    console.log(url);
     this.setState({
       card: null,
+      images: {},
     });
-    fetch(REQUEST_URL)
-      .then((response) => response.json())
-      .then((responseData) => {
-        this.setState({
-          card: {
-            cardData: responseData,
-          },
-        });
-      })
-      .catch((error) => console.error(error));
+
+    let response = await fetch(url);
+    let data = await response.json();
+    this.setState({
+      card: {
+        cardData: data,
+      }
+    })
+
+    let img = {};
+    for (const element of this.state.card.cardData) {
+      if (element.featured_media != 0) {
+        let html = await this.fetchMedia(MEDIA_URL+"/"+element.featured_media);
+        img[element.id] = html;
+      }
+    }
+
+    this.setState ({
+      images: img
+    })
+  }
+
+  fetchMedia = async(url) => {
+    console.log(url);
+    let response = await fetch(url);
+    let data = await response.json();
+    return data.guid.rendered;
   }
 
   render() {
     if (!this.state.card) {
       return this.renderLoadingView();
     }
+
     return this.renderCard();
   }
 
@@ -78,7 +113,7 @@ export default class App extends React.Component {
     this.state.card.cardData.forEach((element) => {
       console.log(element.title.rendered);
     });
-
+    
     return (
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.container}>
@@ -88,8 +123,9 @@ export default class App extends React.Component {
 
           {this.state.card.cardData.map((obj) => (
             <View style={styles.imageContainer}>
-              <Text style={styles.text}>{obj.title.rendered}</Text>
-              <Text>{obj.excerpt.rendered}</Text>
+              { obj.id in this.state.images ? <Image style={{ marginRight: 0, marginBottom: 20, height: 200 }} source={{ uri: this.state.images[obj.id] }} /> : <View></View>}
+              <RenderHTML contentWidth={windowSize.width} source={{html: obj.title.rendered }} tagsStyles={titleStyle} />
+              <RenderHTML contentWidth={windowSize.width} source={{html: obj.excerpt.rendered }} />
               {/* <Image
                 style={{ marginRight: 0, marginBottom: 20, height: 200 }}
                 source={{ uri: this.state.card.pic }}
@@ -110,6 +146,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
+    marginTop: 10
   },
   loader: {
     fontSize: 37,
@@ -157,6 +194,17 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     width: windowSize.width,
+    marginTop: -15,
     marginBottom: 20,
   },
 });
+
+const titleStyle = {
+  body: {
+    whiteSpace: 'normal',
+    fontSize: 27,
+    fontFamily: "Georgia",
+    fontWeight: "600",
+    color: "#333333",
+  }
+}
