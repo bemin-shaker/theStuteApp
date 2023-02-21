@@ -1,33 +1,16 @@
-import React from "react";
-import { 
-  TRenderEngineProvider, 
-  RenderHTMLConfigProvider,
-  RenderHTMLSource,
-  RenderHTML,
-  defaultSystemFonts
-} from "react-native-render-html";
-import {
-  Text,
-  FlatList,
-  View,
-  SafeAreaView,
-  StyleSheet,
-  Dimensions,
-  TouchableHighlight,
-  Image,
-  ScrollView,
-  useWindowDimensions,
-} from "react-native";
-
-const systemFonts = ["Georgia", ...defaultSystemFonts]
-
-const POST_URL = "https://thestute.com/wp-json/wp/v2/posts";
-const FEATURED = "sticky=true"
-const PER_PAGE = "per_page="
-
-const MEDIA_URL = "https://thestute.com/wp-json/wp/v2/media";
+import React, { useState } from "react";
+import { StyleSheet, Dimensions, PlatformColor, View, Text, Platform } from "react-native";
+import * as Constants from "./Constants.js";
+import ArticleFeed from "./Views/ArticleFeed.js"
+import LoadingScreen from "./Views/LoadingScreen.js"
+import FontLoader from "./FontLoader.js"
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Ionicons, MaterialIcons } from "react-native-vector-icons";
 
 const windowSize = Dimensions.get("window");
+
+const Tab = createBottomTabNavigator();
 
 var date = new Date().getDate();
 var month = new Date().getMonth() + 1;
@@ -37,107 +20,83 @@ var totalDate = date + "-" + month + "-" + year;
 var stuteLogo =
   "https://media-exp1.licdn.com/dms/image/C4D1BAQHmMcAf2SDb4A/company-background_10000/0/1605410572468?e=2159024400&v=beta&t=_lI8VdXCqfQ_iO29432uvLuA9yYu_9OAcdJHVV3roRA";
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: true,
-    };
-    this.fetchData = this.fetchData.bind(this);
-  }
-
-  getInitialState() {
-    return {
-      card: null,
-      images: { },
-    };
-  }
-
-  componentDidMount() {
-    this.fetchData(POST_URL+"?"+FEATURED+"&"+PER_PAGE+"10");
-  }
-
-  fetchData = async (url) => {
-    console.log(url);
-    this.setState({
-      card: null,
-      images: {},
-    });
-
-    let response = await fetch(url);
-    let data = await response.json();
-    this.setState({
-      card: {
-        cardData: data,
-      }
-    })
-
-    let img = {};
-    for (const element of this.state.card.cardData) {
-      if (element.featured_media != 0) {
-        let html = await this.fetchMedia(MEDIA_URL+"/"+element.featured_media);
-        img[element.id] = html;
-      }
-    }
-
-    this.setState ({
-      images: img
-    })
-  }
-
-  fetchMedia = async(url) => {
-    console.log(url);
-    let response = await fetch(url);
-    let data = await response.json();
-    return data.guid.rendered;
-  }
-
-  render() {
-    if (!this.state.card) {
-      return this.renderLoadingView();
-    }
-
-    return this.renderCard();
-  }
-
-  renderLoadingView() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.loader}>The Stute</Text>
-        <Text style={styles.text}>{totalDate}</Text>
-      </View>
-    );
-  }
-
-  renderCard() {
-    this.state.card.cardData.forEach((element) => {
-      console.log(element.title.rendered);
-    });
-    
-    return (
-      <ScrollView style={styles.scrollContainer}>
-        <View style={styles.container}>
-          <View style={styles.logoBox}>
-            <Text style={styles.logo}>The Stute</Text>
-          </View>
-
-          {this.state.card.cardData.map((obj) => (
-            <View style={styles.imageContainer}>
-              { obj.id in this.state.images ? <Image style={{ marginRight: 0, marginBottom: 20, height: 200 }} source={{ uri: this.state.images[obj.id] }} /> : <View></View>}
-              <RenderHTML contentWidth={windowSize.width} source={{html: obj.title.rendered }} tagsStyles={titleStyle} />
-              <RenderHTML contentWidth={windowSize.width} source={{html: obj.excerpt.rendered }} />
-              {/* <Image
-                style={{ marginRight: 0, marginBottom: 20, height: 200 }}
-                source={{ uri: this.state.card.pic }}
-              /> */}
-              <View style={styles.horizLine} />
-            </View>
-          ))}
-        </View>
-      </ScrollView>
-    );
-  }
+const Temp = () => {
+  return (
+    <View>
+      <Text>Temp</Text>
+    </View>
+  );
 }
+
+const App = () => {
+  const [isLoading, setIsLoading] = useState(true)
+  const [cardData, setCardData] = useState([])
+  const [mediaData, setMediaData] = useState({})
+
+  if (isLoading) {
+      return (
+        <NavigationContainer>
+          <FontLoader>
+            <View style={styles.container}>
+              <Text style={styles.loader}>The Stute</Text>
+              <Text style={styles.text}>{totalDate}</Text>
+              <LoadingScreen 
+                url={Constants.POST_URL+"?"+Constants.FEATURED+"&"+Constants.PER_PAGE+"10"} 
+                setIsLoading={setIsLoading} 
+                setCardData={setCardData} 
+                setMediaData={setMediaData} 
+              />
+            </View>
+          </FontLoader>
+        </NavigationContainer>
+      )
+  }
+
+  return (
+    <NavigationContainer>
+      <Tab.Navigator screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+
+          if (route.name == "Newspaper") {
+            if (Platform.OS == "ios") {
+              iconName = "ios-newspaper"
+            
+            } else if (Platform.OS == "android") {
+              iconName = "newspaper"
+            }
+          }
+
+          if (Platform.OS = "ios") {
+            return <Ionicons name={iconName} size={size} color={color} />
+          
+          } else if (Platform.OS == "android") {
+            return <MaterialIcons name={iconName} size={size} color={color} />
+          }
+        },
+        ...Platform.select({
+          ios: {
+            tabBarActiveTintColor: PlatformColor("systemBlueColor"),
+            tabBarInactiveTintColor: PlatformColor("systemGrayColor")
+          },
+          android: {
+            tabBarActiveTintColor: PlatformColor("@android:color/holo_blue_light"),
+            tabBarInactiveTintColor: PlatformColor("@android:color/darker_gray")
+          }
+        })
+      })}>
+          <Tab.Screen 
+            name={"Newspaper"} 
+            component={ArticleFeed} 
+            initialParams={{ cardData: cardData, mediaData: mediaData }}
+            options={{ headerShown: false }}
+          />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
