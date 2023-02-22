@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { StyleSheet, Dimensions, PlatformColor, View, Text, Platform } from "react-native";
 import * as Constants from "./Constants.js";
-import ArticleFeed from "./Views/ArticleFeed.js"
-import LoadingScreen from "./Views/LoadingScreen.js"
+import LoadingView from "./Views/LoadingView.js"
+import TopStoriesStack from "./Views/Top Stories/TopStoriesStack.js";
 import FontLoader from "./FontLoader.js"
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -40,7 +40,7 @@ const App = () => {
             <View style={styles.container}>
               <Text style={styles.loader}>The Stute</Text>
               <Text style={styles.text}>{totalDate}</Text>
-              <LoadingScreen 
+              <LoadingView 
                 url={Constants.POST_URL+"?"+Constants.FEATURED+"&"+Constants.PER_PAGE+"10"} 
                 setIsLoading={setIsLoading} 
                 setCardData={setCardData} 
@@ -86,7 +86,7 @@ const App = () => {
       })}>
           <Tab.Screen 
             name={"Top Stories"} 
-            component={ArticleFeed} 
+            component={TopStoriesStack} 
             initialParams={{ cardData: cardData, mediaData: mediaData }}
             options={{ headerShown: false }}
           />

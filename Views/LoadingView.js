@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import * as Constants from "../Constants.js";
 
-const LoadingScreen = ({url, setIsLoading, setCardData, setMediaData}) => {
+const LoadingView = ({url, setIsLoading, setCardData, setMediaData}) => {
     const fetchMedia = async (mediaUrl) => {
       console.log(mediaUrl);
       let response = await fetch(mediaUrl);
@@ -42,4 +42,4 @@ const LoadingScreen = ({url, setIsLoading, setCardData, setMediaData}) => {
     return null
   }
   
-export default LoadingScreen
+export default LoadingView
