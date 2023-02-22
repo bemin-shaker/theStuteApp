@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions, PlatformColor, View, Text, Platform } from "rea
 import * as Constants from "./Common/Constants.js";
 import LoadingView from "./Views/LoadingView.js"
 import TopStoriesStack from "./Views/Top Stories/TopStoriesStack.js";
-import FontLoader from "./FontLoader.js"
+import FontLoader from "./Common/FontLoader.js"
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, MaterialIcons, MaterialCommunityIcons } from "react-native-vector-icons";
@@ -19,14 +19,6 @@ var totalDate = date + "-" + month + "-" + year;
 
 var stuteLogo =
   "https://media-exp1.licdn.com/dms/image/C4D1BAQHmMcAf2SDb4A/company-background_10000/0/1605410572468?e=2159024400&v=beta&t=_lI8VdXCqfQ_iO29432uvLuA9yYu_9OAcdJHVV3roRA";
-
-const Temp = () => {
-  return (
-    <View>
-      <Text>Temp</Text>
-    </View>
-  );
-}
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true)

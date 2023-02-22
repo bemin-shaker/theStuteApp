@@ -2,8 +2,8 @@ import { useFonts } from "expo-font";
 
 export default function FontLoader({ children }) {
     const [fontsLoaded] = useFonts({
-      "Georgia" : require("./assets/fonts/Georgia.ttf"),
-      "GeorgiaBold" : require("./assets/fonts/GeorgiaBold.ttf"),
+      "Georgia" : require("../assets/fonts/Georgia.ttf"),
+      "GeorgiaBold" : require("../assets/fonts/GeorgiaBold.ttf"),
     }); 
   
     if (!fontsLoaded) {
