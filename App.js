@@ -6,7 +6,7 @@ import LoadingScreen from "./Views/LoadingScreen.js"
 import FontLoader from "./FontLoader.js"
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons, MaterialIcons } from "react-native-vector-icons";
+import { Ionicons, MaterialIcons, MaterialCommunityIcons } from "react-native-vector-icons";
 
 const windowSize = Dimensions.get("window");
 
@@ -55,38 +55,37 @@ const App = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => {
-          let iconName;
-
-          if (route.name == "Newspaper") {
-            if (Platform.OS == "ios") {
-              iconName = "ios-newspaper"
-            
-            } else if (Platform.OS == "android") {
-              iconName = "newspaper"
-            }
-          }
-
-          if (Platform.OS = "ios") {
-            return <Ionicons name={iconName} size={size} color={color} />
-          
-          } else if (Platform.OS == "android") {
-            return <MaterialIcons name={iconName} size={size} color={color} />
-          }
-        },
         ...Platform.select({
           ios: {
-            tabBarActiveTintColor: PlatformColor("systemBlueColor"),
+            tabBarIcon: ({ color, size }) => {
+              let iconName;
+
+              if (route.name == "Top Stories") {
+                iconName = "ios-newspaper"
+              }
+
+              return <Ionicons name={iconName} size={size} color={color} />
+            },
+            tabBarActiveTintColor: "#A32538",
             tabBarInactiveTintColor: PlatformColor("systemGrayColor")
           },
           android: {
-            tabBarActiveTintColor: PlatformColor("@android:color/holo_blue_light"),
+            tabBarIcon: ({ color, size }) => {
+              let iconName;
+
+              if (route.name == "Top Stories") {
+                iconName = "newspaper"
+              }
+
+              return <MaterialCommunityIcons name={iconName} size={size} color={color} />
+            },
+            tabBarActiveTintColor: "#A32538",
             tabBarInactiveTintColor: PlatformColor("@android:color/darker_gray")
           }
         })
       })}>
           <Tab.Screen 
-            name={"Newspaper"} 
+            name={"Top Stories"} 
             component={ArticleFeed} 
             initialParams={{ cardData: cardData, mediaData: mediaData }}
             options={{ headerShown: false }}
@@ -109,12 +108,19 @@ const styles = StyleSheet.create({
   },
   loader: {
     fontSize: 37,
-    fontFamily: "Georgia",
-    fontWeight: "600",
     paddingLeft: 20,
     paddingRight: 20,
     textAlign: "center",
     color: "#333333",
+    ...Platform.select({
+      ios: {
+        fontFamily: "Georgia",
+        fontWeight: "600",
+      },
+      android: {
+        fontFamily: "GeorgiaBold",
+      }
+    })
   },
   horizLine: {
     borderBottomColor: "black",
@@ -144,10 +150,17 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 27,
-    fontFamily: "Georgia",
-    fontWeight: "600",
     color: "#333333",
     marginBottom: 10,
+    ...Platform.select({
+      ios: {
+        fontFamily: "Georgia",
+        fontWeight: "600",
+      },
+      android: {
+        fontFamily: "GeorgiaBold",
+      }
+    })
   },
   imageContainer: {
     paddingLeft: 20,
