@@ -1,4 +1,4 @@
-import * as Constants from "../../Constants.js";
+import * as Constants from "../../Common/Constants.js";
 import RenderHTML, { defaultSystemFonts } from "react-native-render-html";
 import {
   Text,
@@ -9,7 +9,7 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
-import FontLoader from "../../FontLoader.js"
+import FontLoader from "../../Common/FontLoader.js"
 
 const windowSize = Dimensions.get("window");
 

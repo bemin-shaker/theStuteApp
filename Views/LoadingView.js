@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import * as Constants from "../Constants.js";
+import * as Constants from "../Common/Constants.js";
 
 const LoadingView = ({url, setIsLoading, setCardData, setMediaData}) => {
     const fetchMedia = async (mediaUrl) => {

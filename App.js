@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Dimensions, PlatformColor, View, Text, Platform } from "react-native";
-import * as Constants from "./Constants.js";
+import * as Constants from "./Common/Constants.js";
 import LoadingView from "./Views/LoadingView.js"
 import TopStoriesStack from "./Views/Top Stories/TopStoriesStack.js";
 import FontLoader from "./FontLoader.js"
