@@ -9,59 +9,67 @@ import {
   Dimensions,
   Platform,
   TouchableWithoutFeedback,
+  PlatformColor,
 } from "react-native";
 import FontLoader from "../../Common/FontLoader.js"
+import DateParser from "../../Common/DateParser.js";
 
 const windowSize = Dimensions.get("window");
 
-const systemFonts = ["Georgia", "GeorgiaBold", ...defaultSystemFonts];
+const systemFonts = [ 
+  'PTSerifRegular', 
+  'PTSerifItalic', 
+  'PTSerifBold', 
+  'PTSerifBoldItalic', 
+  ...defaultSystemFonts
+];
 
 export default function TopStoriesView({ navigation, route }) {
-  const { cardData, mediaData } = route.params;
+  const { cardData, mediaData, authorData } = route.params;
 
   return (
       <ScrollView style={styles.scrollContainer}>
+        <FontLoader>
           <View style={styles.container}>
-            <View style={styles.logoBox}>
-            <Text style={styles.logo}>The Stute</Text>
+            {cardData.map((obj) => (
+              <TouchableWithoutFeedback onPress={() => navigation.navigate("ArticleDetail", {
+                id: obj.id,
+                title: obj.title.rendered,
+                content: obj.content.rendered,
+                date: obj.date,
+                author: authorData[obj.author],
+                media: mediaData,
+              })}>
+                <View style={styles.imageContainer}>
+                    { 
+                        obj.id in mediaData
+                        ? <Image style={{ marginRight: 0, marginBottom: 20, height: 200 }} source={{ uri: mediaData[obj.id] }} /> 
+                        : <View></View>
+                    }
+                    <RenderHTML contentWidth={windowSize.width} source={{html: obj.title.rendered }} systemFonts={systemFonts} tagsStyles={Constants.titleStyle} />
+                    <RenderHTML contentWidth={windowSize.width} source={{html: obj.excerpt.rendered }} systemFonts={systemFonts} tagsStyles={Constants.articleContentStyle} />
+                    <Text style={styles.author}>{authorData[obj.author].name+" • "+DateParser(obj.date)}</Text>
+                    <View style={styles.horizLine} />
+                </View>
+              </TouchableWithoutFeedback>
+            ))}
           </View>
-
-          <FontLoader>
-              {cardData.map((obj) => (
-                <TouchableWithoutFeedback onPress={() => navigation.navigate("ArticleDetail", {
-                  id: obj.id,
-                  title: obj.title.rendered,
-                  content: obj.content.rendered,
-                  media: mediaData,
-                })}>
-                  <View style={styles.imageContainer}>
-                      { 
-                          obj.id in mediaData
-                          ? <Image style={{ marginRight: 0, marginBottom: 20, height: 200 }} source={{ uri: mediaData[obj.id] }} /> 
-                          : <View></View>
-                      }
-                      <RenderHTML contentWidth={windowSize.width} source={{html: obj.title.rendered }} systemFonts={systemFonts} tagsStyles={Constants.titleStyle} />
-                      <RenderHTML contentWidth={windowSize.width} source={{html: obj.excerpt.rendered }} />
-                      <View style={styles.horizLine} />
-                  </View>
-                </TouchableWithoutFeedback>
-              ))}
-          </FontLoader>
-        </View>
+        </FontLoader>
       </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    scrollContainer: {
       flex: 1,
       textAlign: "left",
-      justifyContent: "center",
-      alignItems: "center",
       backgroundColor: "#FFFFFF",
     },
+    container: {
+      paddingTop: 20,
+    },
     horizLine: {
-      borderBottomColor: "black",
+      borderBottomColor: "#AEAEB2",
       borderBottomWidth: 1,
     },
     logo: {
@@ -69,15 +77,7 @@ const styles = StyleSheet.create({
       textAlign: "center",
       color: "#333333",
       marginBottom: 5,
-      ...Platform.select({
-        ios: {
-          fontFamily: "Georgia",
-          fontWeight: "600",
-        },
-        android: {
-          fontFamily: "GeorgiaBold",
-        }
-      })
+      fontFamily: "AbrilFatface"
     },
     logoBox: {
       backgroundColor: "#f7f7f7",
@@ -100,4 +100,18 @@ const styles = StyleSheet.create({
       marginTop: -15,
       marginBottom: 20,
     },
+    author: {
+      fontFamily: "PTSerifRegular",
+      fontSize: 12,
+      paddingTop: 0,
+      paddingBottom: 5,
+      ...Platform.select({
+        ios: {
+          color: PlatformColor("systemGrayColor")
+        },
+        android: {
+          color: PlatformColor("@android:color/darker_gray")
+        }
+      })
+    }
   });

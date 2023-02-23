@@ -8,15 +8,23 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
+  PlatformColor,
 } from "react-native";
 import FontLoader from "../../Common/FontLoader.js"
+import DateParser from "../../Common/DateParser.js";
 
 const windowSize = Dimensions.get("window");
 
-const systemFonts = ["Georgia", "GeorgiaBold", ...defaultSystemFonts];
+const systemFonts = [ 
+  'PTSerifRegular', 
+  'PTSerifItalic', 
+  'PTSerifBold', 
+  'PTSerifBoldItalic', 
+  ...defaultSystemFonts
+];
 
 export default function ArticleDetailView({ navigation, route }) {
-    const { id, title, content, media } = route.params;
+    const { id, title, content, date, author, media } = route.params;
 
     return(
         <ScrollView style={styles.scrollContainer}>
@@ -28,7 +36,8 @@ export default function ArticleDetailView({ navigation, route }) {
                         : <View></View>
                     }
                     <RenderHTML contentWidth={windowSize.width} source={{ html: title }} systemFonts={systemFonts} tagsStyles={Constants.titleStyle} />
-                    <RenderHTML contentWidth={windowSize.width} source={{ html: content }} />
+                    <Text style={styles.author}>{author.name+" • "+DateParser(date)}</Text>
+                    <RenderHTML contentWidth={windowSize.width} source={{ html: content }} systemFonts={systemFonts} tagsStyles={Constants.articleContentStyle} />
                 </View>
             </FontLoader>
         </ScrollView>
@@ -42,7 +51,7 @@ const styles = StyleSheet.create({
       backgroundColor: "#FFFFFF",
     },
     horizLine: {
-      borderBottomColor: "black",
+      borderBottomColor: "#AEAEB2",
       borderBottomWidth: 1,
     },
     logo: {
@@ -50,15 +59,7 @@ const styles = StyleSheet.create({
       textAlign: "center",
       color: "#333333",
       marginBottom: 5,
-      ...Platform.select({
-        ios: {
-          fontFamily: "Georgia",
-          fontWeight: "600",
-        },
-        android: {
-          fontFamily: "GeorgiaBold",
-        }
-      })
+      fontFamily: "PTSerifBold"
     },
     logoBox: {
       backgroundColor: "#f7f7f7",
@@ -81,4 +82,17 @@ const styles = StyleSheet.create({
       width: windowSize.width,
       marginBottom: 20,
     },
+    author: {
+      fontFamily: "PTSerifRegular",
+      fontSize: 12,
+      paddingBottom: 10,
+      ...Platform.select({
+        ios: {
+          color: PlatformColor("systemGrayColor")
+        },
+        android: {
+          color: PlatformColor("@android:color/darker_gray")
+        }
+      })
+    }
   });

@@ -1,7 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TopStoriesView from "./TopStoriesView.js";
 import ArticleDetailView from "./ArticleDetailView.js";
-import { Platform } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -11,8 +10,19 @@ export default function TopStoriesStack({ route }) {
             <Stack.Screen 
                 name="TopStoriesView" 
                 component={TopStoriesView} 
-                initialParams={{ cardData: route.params.cardData, mediaData: route.params.mediaData }}
-                options={{ headerShown: false }}
+                initialParams={{ cardData: route.params.cardData, mediaData: route.params.mediaData, authorData: route.params.authorData }}
+                options={{ 
+                    headerTitle: "The Stute",
+                    headerStyle: {
+                        backgroundColor: "#f7f7f7",
+                    },
+                    headerTitleAlign: "center",
+                    headerTitleStyle: {
+                        fontSize: 28,
+                        color: "#333333",
+                        fontFamily: "AbrilFatface"
+                    }
+                }}
             />
             <Stack.Screen
                 name="ArticleDetail"
@@ -24,18 +34,11 @@ export default function TopStoriesStack({ route }) {
                     },
                     headerTitleAlign: "center",
                     headerTitleStyle: {
-                        fontSize: 24,
+                        fontSize: 28,
                         color: "#333333",
-                        ...Platform.select({
-                            ios: {
-                              fontFamily: "Georgia",
-                              fontWeight: "600",
-                            },
-                            android: {
-                              fontFamily: "GeorgiaBold",
-                            }
-                          })
-                    }
+                        fontFamily: "AbrilFatface"
+                    },
+                    headerBackTitle: "Back",
                 }}
             />
         </Stack.Navigator>

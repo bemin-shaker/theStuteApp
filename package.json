@@ -8,10 +8,13 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo-google-fonts/abril-fatface": "^0.2.3",
+    "@expo-google-fonts/pt-serif": "^0.2.3",
     "@react-native-community/cli-platform-ios": "^8.0.6",
     "@react-navigation/bottom-tabs": "^6.5.5",
     "@react-navigation/native": "^6.1.4",
     "@react-navigation/native-stack": "^6.9.10",
+    "dateformat": "^5.0.3",
     "expo": "~46.0.19",
     "expo-font": "~10.2.0",
     "expo-status-bar": "~1.4.0",

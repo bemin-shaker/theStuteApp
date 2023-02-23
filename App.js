@@ -6,7 +6,7 @@ import TopStoriesStack from "./Views/Top Stories/TopStoriesStack.js";
 import FontLoader from "./Common/FontLoader.js"
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons, MaterialIcons, MaterialCommunityIcons } from "react-native-vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "react-native-vector-icons";
 
 const windowSize = Dimensions.get("window");
 
@@ -24,6 +24,7 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [cardData, setCardData] = useState([])
   const [mediaData, setMediaData] = useState({})
+  const [authorData, setAuthorData] = useState({})
 
   if (isLoading) {
       return (
@@ -37,6 +38,7 @@ const App = () => {
                 setIsLoading={setIsLoading} 
                 setCardData={setCardData} 
                 setMediaData={setMediaData} 
+                setAuthorData={setAuthorData}
               />
             </View>
           </FontLoader>
@@ -79,7 +81,7 @@ const App = () => {
           <Tab.Screen 
             name={"Top Stories"} 
             component={TopStoriesStack} 
-            initialParams={{ cardData: cardData, mediaData: mediaData }}
+            initialParams={{ cardData: cardData, mediaData: mediaData, authorData: authorData }}
             options={{ headerShown: false }}
           />
       </Tab.Navigator>
@@ -104,71 +106,12 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     textAlign: "center",
     color: "#333333",
-    ...Platform.select({
-      ios: {
-        fontFamily: "Georgia",
-        fontWeight: "600",
-      },
-      android: {
-        fontFamily: "GeorgiaBold",
-      }
-    })
-  },
-  horizLine: {
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
-  },
-  logo: {
-    fontSize: 24,
-    textAlign: "center",
-    fontFamily: "Georgia",
-    fontWeight: "600",
-    color: "#333333",
-    marginBottom: 5,
-  },
-  logoBox: {
-    backgroundColor: "#f7f7f7",
-    paddingTop: 45,
-    paddingBottom: 5,
-    marginBottom: 30,
-    shadowColor: "black",
-    shadowOpacity: 0.1,
-    shadowRadius: 0.5,
-    shadowOffset: {
-      height: 1,
-      width: 1,
-    },
-    width: windowSize.width,
+    fontFamily: "AbrilFatface"
   },
   text: {
     fontSize: 27,
     color: "#333333",
     marginBottom: 10,
-    ...Platform.select({
-      ios: {
-        fontFamily: "Georgia",
-        fontWeight: "600",
-      },
-      android: {
-        fontFamily: "GeorgiaBold",
-      }
-    })
-  },
-  imageContainer: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    width: windowSize.width,
-    marginTop: -15,
-    marginBottom: 20,
+    fontFamily: "PTSerifBold"
   },
 });
-
-const titleStyle = {
-  body: {
-    whiteSpace: 'normal',
-    fontSize: 27,
-    fontFamily: "Georgia",
-    fontWeight: "600",
-    color: "#333333",
-  }
-}
