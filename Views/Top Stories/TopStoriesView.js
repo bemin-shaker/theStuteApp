@@ -41,15 +41,15 @@ export default function TopStoriesView({ navigation, route }) {
                 media: mediaData,
               })}>
                 <View style={styles.imageContainer}>
-                    { 
-                        obj.id in mediaData
-                        ? <Image style={{ marginRight: 0, marginBottom: 20, height: 200 }} source={{ uri: mediaData[obj.id] }} /> 
-                        : <View></View>
-                    }
-                    <RenderHTML contentWidth={windowSize.width} source={{html: obj.title.rendered }} systemFonts={systemFonts} tagsStyles={Constants.titleStyle} />
-                    <RenderHTML contentWidth={windowSize.width} source={{html: obj.excerpt.rendered }} systemFonts={systemFonts} tagsStyles={Constants.articleContentStyle} />
-                    <Text style={styles.author}>{authorData[obj.author].name+" • "+DateParser(obj.date)}</Text>
-                    <View style={styles.horizLine} />
+                  { 
+                      obj.id in mediaData
+                      ? <Image style={{ marginRight: 0, marginBottom: 0, height: 200 }} source={{ uri: mediaData[obj.id].guid.rendered }} /> 
+                      : <View></View>
+                  }
+                  <RenderHTML contentWidth={windowSize.width} source={{html: obj.title.rendered }} systemFonts={systemFonts} tagsStyles={Constants.titleStyle} />
+                  <RenderHTML contentWidth={windowSize.width} source={{html: obj.excerpt.rendered }} systemFonts={systemFonts} tagsStyles={Constants.articleContentStyle} />
+                  <Text style={styles.author}>{authorData[obj.author].name+" • "+DateParser(obj.date)}</Text>
+                  <View style={styles.horizLine} />
                 </View>
               </TouchableWithoutFeedback>
             ))}

@@ -42,6 +42,12 @@ export const articleContentStyle = {
         fontSize: 16,
         color: "#333333",
         fontFamily: "PTSerifItalic"
+    },
+    em: {
+        whiteSpace: 'normal',
+        fontSize: 16,
+        color: "#333333",
+        fontFamily: "PTSerifItalic"
     }
     
 }

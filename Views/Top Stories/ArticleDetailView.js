@@ -32,7 +32,7 @@ export default function ArticleDetailView({ navigation, route }) {
                 <View style={styles.imageContainer}>
                     { 
                         media != null && id in media
-                        ? <Image style={{ marginRight: 0, marginBottom: 20, height: 200 }} source={{ uri: media[id] }} /> 
+                        ? <Image style={{ marginRight: 0, marginBottom: 0, height: 200 }} source={{ uri: media[id].guid.rendered }} />
                         : <View></View>
                     }
                     <RenderHTML contentWidth={windowSize.width} source={{ html: title }} systemFonts={systemFonts} tagsStyles={Constants.titleStyle} />
