@@ -35,6 +35,11 @@ export default function ArticleDetailView({ navigation, route }) {
                         ? <Image style={{ marginRight: 0, marginBottom: 0, height: 200 }} source={{ uri: media[id].guid.rendered }} />
                         : <View></View>
                     }
+                    { 
+                        media != null && id in media
+                        ? <Text style={styles.imgCaption}>{media[id].caption.rendered.split("<p>").join("").split("</p>").join("").toUpperCase()}</Text>
+                        : <View></View>
+                    }
                     <RenderHTML contentWidth={windowSize.width} source={{ html: title }} systemFonts={systemFonts} tagsStyles={Constants.titleStyle} />
                     <Text style={styles.author}>{author.name+" • "+DateParser(date)}</Text>
                     <RenderHTML contentWidth={windowSize.width} source={{ html: content }} systemFonts={systemFonts} tagsStyles={Constants.articleContentStyle} />
@@ -94,5 +99,9 @@ const styles = StyleSheet.create({
           color: PlatformColor("@android:color/darker_gray")
         }
       })
+    },
+    imgCaption: {
+      fontFamily: "PTSerifRegular",
+      fontSize: 12,
     }
   });

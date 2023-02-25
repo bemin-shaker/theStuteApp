@@ -21,12 +21,21 @@ export const systemFonts = [
     ...defaultSystemFonts
 ];
 
-export const titleStyle = {
+export const topTitleStyle = {
     body: {
         whiteSpace: 'normal',
         fontSize: 26,
         color: "#333333",
         fontFamily: "PTSerifBold"
+    }
+}
+
+export const titleStyle = {
+    body: {
+        whiteSpace: 'normal',
+        fontSize: 22,
+        color: "#333333",
+        fontFamily: "PTSerifRegular"
     }
 }
 
