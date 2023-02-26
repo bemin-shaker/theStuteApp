@@ -1,25 +1,22 @@
 import { defaultSystemFonts } from "react-native-render-html";
+import { Platform } from "react-native";
 
 export const POST_URL = "https://thestute.com/wp-json/wp/v2/posts";
 export const FEATURED = "sticky=true"
 export const PER_PAGE = "per_page="
+export const INCLUDE = "include="
+export const ORDERBY_ID = "orderby=id"
 
 export const MEDIA_URL = "https://thestute.com/wp-json/wp/v2/media";
 
 export const AUTHOR_URL = "https://thestute.com/wp-json/wp/v2/users";
 
+export const CATEGOY_URL = "https://thestute.com/wp-json/wp/v2/categories";
+
 export const PTSerifRegular = "PTSerifRegular";
-export const PTSerifItalic = "PTSerifItalic";
+export const PTSerifItalic = "PTSeri_Italic";
 export const PTSerifBold = "PTSerifBold";
 export const PTSerifBoldItalic = "PTSerifBoldItalic";
-
-export const systemFonts = [
-    self.PTSerifRegular,
-    self.PTSerifItalic,
-    self.PTSerifBold,
-    self.PTSerifBoldItalic, 
-    ...defaultSystemFonts
-];
 
 export const topTitleStyle = {
     body: {
@@ -40,6 +37,19 @@ export const titleStyle = {
 }
 
 export const articleContentStyle = {
+    em: {
+        whiteSpace: 'normal',
+        fontSize: 16,
+        color: "#333333",
+        ...Platform.select({
+            ios: {
+                fontFamily: "PTSerifItalic"
+            },
+            android: {
+                fontFamily: "PTSerif-Italic.ttf",
+            }
+        })
+    },
     body: {
         whiteSpace: 'normal',
         fontSize: 16,
@@ -52,11 +62,20 @@ export const articleContentStyle = {
         color: "#333333",
         fontFamily: "PTSerifItalic"
     },
-    em: {
+}
+
+export const categoryStyle = {
+    body: {
         whiteSpace: 'normal',
         fontSize: 16,
         color: "#333333",
-        fontFamily: "PTSerifItalic"
-    }
-    
+        fontFamily: "PTSerifRegular"
+    },
+    ins: {
+        paddingTop: 10,
+        whiteSpace: 'normal',
+        fontSize: 16,
+        color: "#333333",
+        fontFamily: "PTSerifRegular"
+    } 
 }

@@ -25,7 +25,7 @@ const systemFonts = [
 ];
 
 export default function TopStoriesView({ navigation, route }) {
-  const { cardData, mediaData, authorData } = route.params;
+  const { cardData, mediaData, authorData, categoryData } = route.params;
 
   return (
       <ScrollView style={styles.scrollContainer}>
@@ -33,17 +33,19 @@ export default function TopStoriesView({ navigation, route }) {
           <View style={styles.container}>
             {cardData.map((obj) => (
               <TouchableWithoutFeedback onPress={() => navigation.navigate("ArticleDetail", {
-                id: obj.id,
                 title: obj.title.rendered,
                 content: obj.content.rendered,
                 date: obj.date,
                 author: authorData[obj.author],
+                mediaId: obj.featured_media,
                 media: mediaData,
+                categoryIds: obj.categories,
+                categoryData: categoryData
               })}>
                 <View style={styles.imageContainer}>
                   { 
-                      obj.id in mediaData
-                      ? <Image style={{ marginRight: 0, marginBottom: 0, height: 200 }} source={{ uri: mediaData[obj.id].guid.rendered }} /> 
+                      obj.featured_media in mediaData
+                      ? <Image style={{ marginRight: 0, marginBottom: 0, height: 200 }} source={{ uri: mediaData[obj.featured_media].guid.rendered }} /> 
                       : <View></View>
                   }
                   <RenderHTML contentWidth={windowSize.width} source={{html: obj.title.rendered }} systemFonts={systemFonts} tagsStyles={Constants.topTitleStyle} />

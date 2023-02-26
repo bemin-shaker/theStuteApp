@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import RenderHTML, { defaultSystemFonts } from "react-native-render-html";
 import { StyleSheet, Dimensions, PlatformColor, View, Text, Platform } from "react-native";
 import * as Constants from "./Common/Constants.js";
 import LoadingView from "./Views/LoadingView.js"
@@ -25,6 +26,7 @@ const App = () => {
   const [cardData, setCardData] = useState([])
   const [mediaData, setMediaData] = useState({})
   const [authorData, setAuthorData] = useState({})
+  const [categoryData, setCategoryData] = useState({});
 
   if (isLoading) {
       return (
@@ -39,6 +41,7 @@ const App = () => {
                 setCardData={setCardData} 
                 setMediaData={setMediaData} 
                 setAuthorData={setAuthorData}
+                setCategoryData={setCategoryData}
               />
             </View>
           </FontLoader>
@@ -81,7 +84,7 @@ const App = () => {
           <Tab.Screen 
             name={"Top Stories"} 
             component={TopStoriesStack} 
-            initialParams={{ cardData: cardData, mediaData: mediaData, authorData: authorData }}
+            initialParams={{ cardData: cardData, mediaData: mediaData, authorData: authorData, categoryData: categoryData }}
             options={{ headerShown: false }}
           />
       </Tab.Navigator>

@@ -10,7 +10,12 @@ export default function TopStoriesStack({ route }) {
             <Stack.Screen 
                 name="TopStoriesView" 
                 component={TopStoriesView} 
-                initialParams={{ cardData: route.params.cardData, mediaData: route.params.mediaData, authorData: route.params.authorData }}
+                initialParams={{ 
+                    cardData: route.params.cardData,
+                    mediaData: route.params.mediaData, 
+                    authorData: route.params.authorData,
+                    categoryData: route.params.categoryData
+                }}
                 options={{ 
                     headerTitle: "The Stute",
                     headerStyle: {

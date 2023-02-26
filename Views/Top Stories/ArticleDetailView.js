@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import FontLoader from "../../Common/FontLoader.js"
 import DateParser from "../../Common/DateParser.js";
+import CategoryInfo from "../../Common/CategoryInfo.js";
 
 const windowSize = Dimensions.get("window");
 
@@ -24,25 +25,26 @@ const systemFonts = [
 ];
 
 export default function ArticleDetailView({ navigation, route }) {
-    const { id, title, content, date, author, media } = route.params;
+    const { title, content, date, author, mediaId, media, categoryIds, categoryData } = route.params;
 
     return(
         <ScrollView style={styles.scrollContainer}>
             <FontLoader>
                 <View style={styles.imageContainer}>
                     { 
-                        media != null && id in media
-                        ? <Image style={{ marginRight: 0, marginBottom: 0, height: 200 }} source={{ uri: media[id].guid.rendered }} />
+                        media != null && mediaId in media
+                        ? <Image style={{ marginRight: 0, marginBottom: 0, height: 200 }} source={{ uri: media[mediaId].guid.rendered }} />
                         : <View></View>
                     }
                     { 
-                        media != null && id in media
-                        ? <Text style={styles.imgCaption}>{media[id].caption.rendered.split("<p>").join("").split("</p>").join("").toUpperCase()}</Text>
+                        media != null && mediaId in media
+                        ? <Text style={styles.imgCaption}>{media[mediaId].caption.rendered.split("<p>").join("").split("</p>").join("").toUpperCase()}</Text>
                         : <View></View>
                     }
                     <RenderHTML contentWidth={windowSize.width} source={{ html: title }} systemFonts={systemFonts} tagsStyles={Constants.titleStyle} />
                     <Text style={styles.author}>{author.name+" • "+DateParser(date)}</Text>
                     <RenderHTML contentWidth={windowSize.width} source={{ html: content }} systemFonts={systemFonts} tagsStyles={Constants.articleContentStyle} />
+                    <RenderHTML contentWidth={windowSize.width} source={{ html: CategoryInfo(categoryIds, categoryData) }} systemFonts={systemFonts} tagsStyles={Constants.categoryStyle} />
                 </View>
             </FontLoader>
         </ScrollView>
