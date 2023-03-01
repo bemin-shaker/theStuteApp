@@ -1,19 +1,17 @@
-import React from "react";
-import {
-  Text,
-  FlatList,
-  View,
-  SafeAreaView,
-  StyleSheet,
-  Dimensions,
-  TouchableHighlight,
-  Image,
-  ScrollView,
-} from "react-native";
-
-const REQUEST_URL = "https://thestute.com/wp-json/wp/v2/posts?_embed";
+import React, { useState } from "react";
+import RenderHTML, { defaultSystemFonts } from "react-native-render-html";
+import { StyleSheet, Dimensions, PlatformColor, View, Text, Platform } from "react-native";
+import * as Constants from "./Common/Constants.js";
+import LoadingView from "./Views/LoadingView.js"
+import TopStoriesStack from "./Views/Top Stories/TopStoriesStack.js";
+import FontLoader from "./Common/FontLoader.js"
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Ionicons, MaterialCommunityIcons } from "react-native-vector-icons";
 
 const windowSize = Dimensions.get("window");
+
+const Tab = createBottomTabNavigator();
 
 var date = new Date().getDate();
 var month = new Date().getMonth() + 1;
@@ -23,85 +21,78 @@ var totalDate = date + "-" + month + "-" + year;
 var stuteLogo =
   "https://media-exp1.licdn.com/dms/image/C4D1BAQHmMcAf2SDb4A/company-background_10000/0/1605410572468?e=2159024400&v=beta&t=_lI8VdXCqfQ_iO29432uvLuA9yYu_9OAcdJHVV3roRA";
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: true,
-    };
-    this.fetchData = this.fetchData.bind(this);
-  }
+const App = () => {
+  const [isLoading, setIsLoading] = useState(true)
+  const [cardData, setCardData] = useState([])
+  const [mediaData, setMediaData] = useState({})
+  const [authorData, setAuthorData] = useState({})
+  const [categoryData, setCategoryData] = useState({});
 
-  getInitialState() {
-    return {
-      card: null,
-    };
-  }
-
-  componentDidMount() {
-    this.fetchData();
-  }
-
-  fetchData() {
-    this.setState({
-      card: null,
-    });
-    fetch(REQUEST_URL)
-      .then((response) => response.json())
-      .then((responseData) => {
-        this.setState({
-          card: {
-            cardData: responseData,
-          },
-        });
-      })
-      .catch((error) => console.error(error));
-  }
-
-  render() {
-    if (!this.state.card) {
-      return this.renderLoadingView();
-    }
-    return this.renderCard();
-  }
-
-  renderLoadingView() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.loader}>The Stute</Text>
-        <Text style={styles.text}>{totalDate}</Text>
-      </View>
-    );
-  }
-
-  renderCard() {
-    this.state.card.cardData.forEach((element) => {
-      console.log(element.title.rendered);
-    });
-
-    return (
-      <ScrollView style={styles.scrollContainer}>
-        <View style={styles.container}>
-          <View style={styles.logoBox}>
-            <Text style={styles.logo}>The Stute</Text>
-          </View>
-
-          {this.state.card.cardData.map((obj) => (
-            <View style={styles.imageContainer}>
-              <Text style={styles.text}>{obj.title.rendered}</Text>
-              <Text>{obj.excerpt.rendered}</Text>
-              {/* <Image
-                style={{ marginRight: 0, marginBottom: 20, height: 200 }}
-                source={{ uri: this.state.card.pic }}
-              /> */}
-              <View style={styles.horizLine} />
+  if (isLoading) {
+      return (
+        <NavigationContainer>
+          <FontLoader>
+            <View style={styles.container}>
+              <Text style={styles.loader}>The Stute</Text>
+              <Text style={styles.text}>{totalDate}</Text>
+              <LoadingView 
+                url={Constants.POST_URL+"?"+Constants.FEATURED+"&"+Constants.PER_PAGE+"10"} 
+                setIsLoading={setIsLoading} 
+                setCardData={setCardData} 
+                setMediaData={setMediaData} 
+                setAuthorData={setAuthorData}
+                setCategoryData={setCategoryData}
+              />
             </View>
-          ))}
-        </View>
-      </ScrollView>
-    );
+          </FontLoader>
+        </NavigationContainer>
+      )
   }
+
+  return (
+    <NavigationContainer>
+      <Tab.Navigator screenOptions={({ route }) => ({
+        ...Platform.select({
+          ios: {
+            tabBarIcon: ({ color, size }) => {
+              let iconName;
+
+              if (route.name == "Top Stories") {
+                iconName = "ios-newspaper"
+              }
+
+              return <Ionicons name={iconName} size={size} color={color} />
+            },
+            tabBarActiveTintColor: "#A32538",
+            tabBarInactiveTintColor: PlatformColor("systemGrayColor")
+          },
+          android: {
+            tabBarIcon: ({ color, size }) => {
+              let iconName;
+
+              if (route.name == "Top Stories") {
+                iconName = "newspaper"
+              }
+
+              return <MaterialCommunityIcons name={iconName} size={size} color={color} />
+            },
+            tabBarActiveTintColor: "#A32538",
+            tabBarInactiveTintColor: PlatformColor("@android:color/darker_gray")
+          }
+        })
+      })}>
+          <Tab.Screen 
+            name={"Top Stories"} 
+            component={TopStoriesStack} 
+            initialParams={{ cardData: cardData, mediaData: mediaData, authorData: authorData, categoryData: categoryData }}
+            options={{ headerShown: false }}
+          />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
 }
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
@@ -110,53 +101,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
+    marginTop: 10
   },
   loader: {
     fontSize: 37,
-    fontFamily: "Georgia",
-    fontWeight: "600",
     paddingLeft: 20,
     paddingRight: 20,
     textAlign: "center",
     color: "#333333",
-  },
-  horizLine: {
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
-  },
-  logo: {
-    fontSize: 24,
-    textAlign: "center",
-    fontFamily: "Georgia",
-    fontWeight: "600",
-    color: "#333333",
-    marginBottom: 5,
-  },
-  logoBox: {
-    backgroundColor: "#f7f7f7",
-    paddingTop: 45,
-    paddingBottom: 5,
-    marginBottom: 30,
-    shadowColor: "black",
-    shadowOpacity: 0.1,
-    shadowRadius: 0.5,
-    shadowOffset: {
-      height: 1,
-      width: 1,
-    },
-    width: windowSize.width,
+    fontFamily: "AbrilFatface"
   },
   text: {
     fontSize: 27,
-    fontFamily: "Georgia",
-    fontWeight: "600",
     color: "#333333",
     marginBottom: 10,
-  },
-  imageContainer: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    width: windowSize.width,
-    marginBottom: 20,
+    fontFamily: "PTSerifBold"
   },
 });
