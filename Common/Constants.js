@@ -24,7 +24,8 @@ export const topTitleStyle = {
         whiteSpace: 'normal',
         fontSize: 26,
         color: "#333333",
-        fontFamily: "PTSerifBold"
+        fontFamily: "PTSerifBold",
+        paddingBottom: 3
     }
 }
 

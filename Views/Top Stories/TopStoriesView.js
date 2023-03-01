@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     author: {
       fontFamily: "PTSerifRegular",
       fontSize: 12,
-      paddingTop: 0,
+      paddingTop: 3,
       paddingBottom: 5,
       ...Platform.select({
         ios: {
